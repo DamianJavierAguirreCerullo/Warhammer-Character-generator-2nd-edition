@@ -3,7 +3,9 @@ using System.Collections.Generic;
 
 System.Random random = new Random();
 
+int valor_un_de_diez = 0;
 int valor_dos_de_diez = 0;
+int valor_un_de_cien = 0;
 string switchControl = "menu";
 
 int habilidad_de_armas = 0;
@@ -17,7 +19,7 @@ int empatia = 0;
 int ataques = 1;
 int heridas = 0;
 int bonificacion_por_fuerza = 0;
-int bonificacion_por_resitencia = 0;
+int bonificacion_por_resistencia = 0;
 int movimiento = 0;
 int magia = 0;
 int puntos_de_locura = 0;
@@ -56,12 +58,28 @@ List<string> telentos_aleatorios = new List<string>
     "Ambidiestro", "Cortés", "Genio aritmético", "Guerrero nato", "Imperturbable", "Imitador", "Intelectual", "Muy fuerte", "Muy resistente", "Oído aguzado", "Pies ligeros", "Puntería", "Recio", "Reflejos rápidos", "Resistencia a enfermedades", "Resistencia a la magia", "Resistencia a venenos", "Robusto", "Sangre fría", "Sexto sentido", "Suerte", "Vista excelente", "Visión nocturna"
 };
 
+int UnDeDiez()
+{
+    valor_dos_de_diez = random.Next(1, 10);
+    return valor_dos_de_diez;
+}
 
 int DosDeDiez()
 {
     valor_dos_de_diez = random.Next(2, 20);
     return valor_dos_de_diez;
-    Console.WriteLine(valor_dos_de_diez);
+}
+
+int UnDeCien()
+{
+    valor_un_de_cien = random.Next(1, 100);
+    return valor_un_de_cien;
+}
+
+void BonificadoresFuerzaYResistencia()
+{
+    bonificacion_por_fuerza = fuerza / 10;
+    bonificacion_por_resistencia = resistencia / 10;
 }
 
 void EstadisticasAleatorias()
@@ -74,6 +92,181 @@ void EstadisticasAleatorias()
     inteligencia = DosDeDiez();
     voluntad = DosDeDiez();
     empatia = DosDeDiez();
+}
+
+void EstadisticasAleatoriasElfo()
+{
+    EstadisticasAleatorias();
+    habilidad_de_armas += 20;
+    habilidad_de_proyectil += 30;
+    fuerza += 20;
+    resistencia += 20;
+    agilidad += 30;
+    inteligencia += 20;
+    voluntad += 20;
+    empatia += 20;
+    movimiento = 3;
+    BonificadoresFuerzaYResistencia();
+    UnDeDiez();
+
+    if (valor_un_de_diez <= 3)
+    {
+        heridas = 9;
+    }
+    else if (valor_un_de_diez <= 6)
+    {
+        heridas = 10;
+    }
+    else if (valor_un_de_diez <= 9)
+    {
+        heridas = 11;
+    }
+    else
+    {
+        heridas = 12;
+    }
+
+    UnDeDiez();
+    if (valor_un_de_diez <= 4)
+    {
+        puntos_de_destino = 1;
+    }
+    else if (valor_un_de_diez <= 7)
+    {
+        puntos_de_destino = 2;
+    }
+    else
+    {
+        puntos_de_destino = 3;
+    }
+
+    elfo_habilidades.Add("Hablar idioma(Eltharin)");
+    elfo_habilidades.Add("Hablar idioma(Reikspiel)");
+    elfo_habilidades.Add("Sabiduría popular(Elfos)");
+}
+void EstadisticasAleatoriasEnano()
+{
+    habilidad_de_armas = 30+DosDeDiez();
+    habilidad_de_proyectil = 20+DosDeDiez();
+    fuerza = 20+DosDeDiez();
+    resistencia = 30+DosDeDiez();
+    agilidad = 10+DosDeDiez();
+    inteligencia = 20+DosDeDiez();
+    voluntad = 20+DosDeDiez();
+    empatia = 10+DosDeDiez();
+    movimiento = 5;
+    BonificadoresFuerzaYResistencia();
+    UnDeDiez();
+
+    if (valor_un_de_diez <= 3)
+    {
+        heridas = 11;
+    }
+    else if (valor_un_de_diez <= 6)
+    {
+        heridas = 12;
+    }
+    else if (valor_un_de_diez <= 9)
+    {
+        heridas = 13;
+    }
+    else
+    {
+        heridas = 14;
+    }
+
+    UnDeDiez();
+    if (valor_un_de_diez <= 7)
+    {
+        puntos_de_destino = 2;
+    }
+    else
+    {
+        puntos_de_destino = 3;
+    }
+}
+void EstadisticasAleatoriasHalfling()
+{
+    habilidad_de_armas = 10+DosDeDiez();
+    habilidad_de_proyectil = 30+DosDeDiez();
+    fuerza = 10+DosDeDiez();
+    resistencia = 10+DosDeDiez();
+    agilidad = 30+DosDeDiez();
+    inteligencia = 20+DosDeDiez();
+    voluntad = 20+DosDeDiez();
+    empatia = 30+DosDeDiez();
+    movimiento = 4;
+    BonificadoresFuerzaYResistencia();
+    UnDeDiez();
+
+    if (valor_un_de_diez <= 3)
+    {
+        heridas = 8;
+    }
+    else if (valor_un_de_diez <= 6)
+    {
+        heridas = 9;
+    }
+    else if (valor_un_de_diez <= 9)
+    {
+        heridas = 10;
+    }
+    else
+    {
+        heridas = 11;
+    }
+
+    UnDeDiez();
+    if (valor_un_de_diez <= 7)
+    {
+        puntos_de_destino = 2;
+    }
+    else
+    {
+        puntos_de_destino = 3;
+    }
+}
+void EstadisticasAleatoriasHumano()
+{
+    habilidad_de_armas = 20+DosDeDiez();
+    habilidad_de_proyectil = 20+DosDeDiez();
+    fuerza = 20+DosDeDiez();
+    resistencia = 20+DosDeDiez();
+    agilidad = 20+DosDeDiez();
+    inteligencia = 20+DosDeDiez();
+    voluntad = 20+DosDeDiez();
+    empatia = 20+DosDeDiez();
+    movimiento = 4;
+    BonificadoresFuerzaYResistencia();
+    UnDeDiez();
+
+    if (valor_un_de_diez <= 3)
+    {
+        heridas = 10;
+    }
+    else if (valor_un_de_diez <= 6)
+    {
+        heridas = 11;
+    }
+    else if (valor_un_de_diez <= 9)
+    {
+        heridas = 12;
+    }
+    else
+    {
+        heridas = 13;
+    }
+
+    UnDeDiez();
+    if (valor_un_de_diez <= 4)
+    {
+        puntos_de_destino = 2;
+    }
+    else
+    {
+        puntos_de_destino = 3;
+    }
+
 }
 
 
@@ -91,7 +284,7 @@ void Reset()
     ataques = 1;
     heridas = 0;
     bonificacion_por_fuerza = 0;
-    bonificacion_por_resitencia = 0;
+    bonificacion_por_resistencia = 0;
     movimiento = 0;
     magia = 0;
     puntos_de_locura = 0;
