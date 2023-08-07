@@ -1,5 +1,7 @@
 ﻿
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Reflection.Emit;
 
 System.Random random = new Random();
 
@@ -7,7 +9,9 @@ int valor_un_de_diez = 0;
 int valor_dos_de_diez = 0;
 int valor_un_de_cien = 0;
 int leer_seleccion = 0;
+int cantidadDeOpciones = 0;
 string switchControl = "menu";
+string mensajeConsola = "";
 
 
 int habilidad_de_armas = 0;
@@ -43,23 +47,23 @@ List<string> humano_talentos = new List<string>();
 
 List<string> elfo_profesion_inicial = new List<string>
 {
-    "Aprendiz de hechicero","Artista","Embajador","Cazador","Guerrero de camarilla","Mercenario","Mensajero","Forajido","Escolta","Bribón","Escriba","Marinero","Estudiante","Ladrón","Menestral","Vagabundo"
+    "","Aprendiz de hechicero","Artista","Embajador","Cazador","Guerrero de camarilla","Mercenario","Mensajero","Forajido","Escolta","Bribón","Escriba","Marinero","Estudiante","Ladrón","Menestral","Vagabundo"
 };
 List<string> elfo_profesion_inicial_descripcion = new List<string>
 {
-    "Los hymanos que nacen con capacidades magicas son individuos pelogrosos y temibles. Un hechicero inexperto siempre acaba rodeado de demonios y catastrofes.\n" +
-    "Para acabar con esta amenaza, el imperio envia lejos a estas personas para que se unan a una de las ocho ordenes de hechiceria.\n" +
-    "Durante su aprendizaje los jovenes hechiceros aprenden a usar la magia sin percances, y deciden a cual de las ordenes se unira.\n" +
-    "Algunos aprendices estaran obligados a servir al hechicero que descubrio sus talentos,\n" +
+    "","Los humanos que nacen con capacidades magicas son individuos pelogrosos y temibles. Un hechicero inexperto siempre acaba rodeado de demonios y catastrofes." +
+    "Para acabar con esta amenaza, el imperio envia lejos a estas personas para que se unan a una de las ocho ordenes de hechiceria." +
+    "Durante su aprendizaje los jovenes hechiceros aprenden a usar la magia sin percances, y deciden a cual de las ordenes se unira." +
+    "Algunos aprendices estaran obligados a servir al hechicero que descubrio sus talentos," +
     "mientra que otros se van de aventuras para ganar dinero suficiente para pagar su tutela en los Colegios de la Magia.\n" +
     "Los elfos son magicos por naturaleza, y no necesitan asistir a estas instituciones humanas, sino que aprenden de sus propios maestros del saber sobre las ordenes de la magia\n" +
-    "Esquema de mejoras Agilidad +5 Inteligencia +10 Voluntad +15 Heridas +2 Magia +1\n" +
-    "Habilidades:Buscar,Canalizacion,Hablar idioma(clasico),leer/escribir,Lengua arcana(Magia),Percepcion,Sabiduria academica(Magia),Sentir magia\n" +
-    "Talentos: Afinidad con el Aethyr o Manos rapidas, Intelectual o Muy resistente,Magia pueril(Arcana)\n" +
-    "Enseres: Baculo,mochila,libro impreso\n" +
-    "accesos:Erudito,escriba,estudiante,hechicero vulgar\n" +
-    "salidas:Erudito,escriba,hechicero adepto\n" +
-    "nota: si quieres ser cvapaz de lanzar hechizos debes aumentar tu caracteristica de Magia con la mejora gratis disponiblñe durante la creacion de personaje.Los halflings y enanos no pueden acceder a esta profesion. Los hechiceros son temidos y a veces odiados. Piensatelo bien antes de escoger esta profesion.",
+    "\nESQUEMAS DE MEJORAS: Agilidad +5 Inteligencia +10 Voluntad +15 Heridas +2 Magia +1\n" +
+    "\nHABILIDADES:Buscar,Canalizacion,Hablar idioma(clasico),leer/escribir,Lengua arcana(Magia),Percepcion,Sabiduria academica(Magia),Sentir magia\n" +
+    "\nTALENTOS: Afinidad con el Aethyr o Manos rapidas, Intelectual o Muy resistente,Magia pueril(Arcana)\n" +
+    "\nENSERES: Baculo,mochila,libro impreso\n" +
+    "\nACCESOS:Erudito,escriba,estudiante,hechicero vulgar\n" +
+    "\nSALIDAS:Erudito,escriba,hechicero adepto\n" +
+    "\nNOTA: si quieres ser capaz de lanzar hechizos debes aumentar tu caracteristica de Magia con la mejora gratis disponible durante la creacion de personaje.Los halflings y enanos no pueden acceder a esta profesion. Los hechiceros son temidos y a veces odiados. Piensatelo bien antes de escoger esta profesion.",
 };
 List<string> enano_profesion_inicial = new List<string>
 {
@@ -118,24 +122,65 @@ void ElfoNombre(int genero)
     nombre = name;
 }
 
-void ElfoProfesion(int numeroProfesion)
+void LertorDeConsola(int opciones)
 {
+    int numero = 0;
+    Console.WriteLine(mensajeConsola); 
+    string leerConsola = Console.ReadLine();
+    bool aprovado = int.TryParse(leerConsola, out numero);
+
+    if (aprovado && (int.Parse(leerConsola) >= 1 || int.Parse(leerConsola) <= opciones))
+    {
+        leer_seleccion = int.Parse(leerConsola);
+    }
+    else
+    {
+        Console.WriteLine($"ERROR usted a ingresado <{leerConsola}> el cual no es valido en esta seleccion");
+        LertorDeConsola(opciones);
+    }
+
+
+}
+
+void ElfoProfesion()
+{
+    mensajeConsola = "";
     string prof = "";
-    int num = 0;
-    prof = elfo_profesion_inicial[numeroProfesion];
+    int numprof = 0;
+    int seleccion = 0;
+    Console.WriteLine("El elfo puede empezar con las siguientes profesiones\n");
+    for (int i=1;i < elfo_profesion_inicial.Count;i++)
+    {
+        Console.WriteLine($"{elfo_profesion_inicial[i]} escriba {i} y enter para saber mas sobre la profesion");
+    }
+
+    LertorDeConsola(elfo_profesion_inicial.Count - 1);
+
+    if (leer_seleccion != 0)
+    {
+        prof = elfo_profesion_inicial[leer_seleccion];
+    }
+    else
+    {
+        Console.WriteLine($"ERROR usted a ingresado <0> el cual no es valido en esta seleccion");
+        ElfoProfesion();
+    }
+
     Console.WriteLine($"\n{prof}\n" +
-        $"{elfo_profesion_inicial_descripcion[numeroProfesion]}");
+        $"{elfo_profesion_inicial_descripcion[leer_seleccion]}");
+    mensajeConsola = ("Si desea quedarse con esta posicion escriba 1 y enter sino 2 para volver a la seleccion de profesiones");
 
-    profesion = prof;
+    LertorDeConsola(2);
+    if (leer_seleccion == 1)
+    {
+        profesion = prof;
 
-    //if(num == 1) 
-    //{
-    //    profesion = prof;
-    //}
-    //else if(num == 2)
-    //{
-    //    return;
-    //}
+    }
+    else if (leer_seleccion == 2)
+    {
+        ElfoProfesion();
+    }
+
 }
 int UnDeDiez()
 {
@@ -149,11 +194,6 @@ int DosDeDiez()
     return valor_dos_de_diez;
 }
 
-int UnDeCien()
-{
-    valor_un_de_cien = random.Next(1, 100);
-    return valor_un_de_cien;
-}
 
 void Mostrar()
 {
@@ -198,7 +238,7 @@ void GeneradorElfo()
     inteligencia += 20;
     voluntad += 20;
     empatia += 20;
-    movimiento = 3;
+    movimiento = 5;
     BonificadoresFuerzaYResistencia();
     
     UnDeDiez();
@@ -239,12 +279,12 @@ void GeneradorElfo()
     elfo_talentos.Add("Vision nocturna");
     elfo_talentos.Add("Vista exelente");
 
-    Console.WriteLine("Elija uno de los siguientes talentos para su elfo:\n" +
+    mensajeConsola = ("Elija uno de los siguientes talentos para su elfo:\n" +
         "Afinidad con el Aethyr o Especialista en armas (arco largo)\n" +
         "Afinidad con el Aethyr +10 a sentir magia y a canalizar\n" +
         "Especialista en armas (arco largo) puedes usar el arco largo sin penalizacion\n" +
         "Escriba 1 y enter para Afinidad con el aethyr o 2 para especialista en armas(arco largo)");
-    leer_seleccion = int.Parse(Console.ReadLine());
+    LertorDeConsola(2);
     if (leer_seleccion == 1)
     {
         elfo_talentos.Add("Afinidad con el Aethyr");
@@ -254,13 +294,13 @@ void GeneradorElfo()
         elfo_talentos.Add("Especialista en armas(arco largo)");
     }
 
-    Console.WriteLine("Elija uno de los siguientes talentos para su elfo:\n" +
+    mensajeConsola = ("Elija uno de los siguientes talentos para su elfo:\n" +
         "Sangre fria o Intelectual\n" +
         "Sangre fria +5 permanente a tu voluntad\n" +
         "Intelectual +5 permanente a tu inteligencia\n"+
         "Escriba 1 y enter para Sangre fria o 2 para Intelectual\n");
 
-    leer_seleccion = int.Parse(Console.ReadLine());
+    LertorDeConsola(2);
         if (leer_seleccion == 1)
         {
             elfo_talentos.Add("Sangre fria");
@@ -273,12 +313,12 @@ void GeneradorElfo()
     
         }
 
-    Console.WriteLine("Eliga un genero para su personaje\n" +
+    mensajeConsola = ("Eliga un genero para su personaje\n" +
         "Escriba 1 si desea que sea hombre y 2 si desea que sea mujer");
-    ElfoNombre(int.Parse(Console.ReadLine()));
+    LertorDeConsola(2);
+    ElfoNombre(leer_seleccion);
 
-    leer_seleccion = int.Parse(Console.ReadLine());
-    ElfoProfesion(leer_seleccion);
+    ElfoProfesion();
 
     Mostrar();
 }
